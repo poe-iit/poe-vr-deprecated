@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.testproject.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\Wunder\\TestProject\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "TestProject [Testing]"
+        }
+      }
+    }
+  ]
+}
