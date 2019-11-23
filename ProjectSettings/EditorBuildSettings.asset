@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/FreeOpenBuilding_1.1/FOB_Scene/s.unity
+    guid: afc62e2ecdf8f3742834d495a55e6640
   m_configObjects: {}
