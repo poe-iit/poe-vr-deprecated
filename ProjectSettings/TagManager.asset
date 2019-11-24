@@ -6,6 +6,8 @@ TagManager:
   tags:
   - projectile
   - FxTemporaire
+  - id_card
+  - ceiling_light
   layers:
   - Default
   - TransparentFX
