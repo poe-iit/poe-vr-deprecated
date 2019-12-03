@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/FreeOpenBuilding_1.1/FOB_Scene/s.unity
     guid: afc62e2ecdf8f3742834d495a55e6640
+  - enabled: 1
+    path: Assets/Scenes/Light Toggle Scene.unity
+    guid: d31f1703fd5c00e47aa7fbf3e382227d
   m_configObjects: {}
