@@ -20,6 +20,8 @@ public class LightToggle : MonoBehaviour
     public Light[] buttonLights;
     public GameObject[] allCeilingLightsGameobject;
     public static int numberLights = 0;
+    public AudioSource alarmAudio;
+    public bool audioAllowed = true;
     
     //public int lastIndex = 0;
     // Start is called before the first frame update
@@ -123,6 +125,9 @@ public class LightToggle : MonoBehaviour
             //buttonLights[1].enabled = false;
             enableButtons = false;
             colorChanged = false;
+            if (audioAllowed==true) {
+                alarmAudio.enabled = !alarmAudio.enabled;
+            }
         }
     }
 
