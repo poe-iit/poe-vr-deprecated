@@ -4,7 +4,7 @@
 
 Built using [Unity](https://unity.com/) and [SteamVR](https://assetstore.unity.com/packages/tools/integration/steamvr-plugin-32647)
 
-[](POESystemDemonstration.gif)
+![](POESystemDemonstration.gif)
 
 <!--![](buttonPress.gif)-->
 
