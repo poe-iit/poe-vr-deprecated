@@ -1,10 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class LightToggle : MonoBehaviour
 {
     public Light[] Lights;
+
+    public GameObject DangerZone;
+    public GameObject[] SafeZones;
+    private NavMeshPath SafePath;
+    public float PathLength;
+    
 
     public float timeUsed;
     public bool toggleLights = false;
@@ -50,7 +57,7 @@ public class LightToggle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+        CompareSafeZones();
         if (toggleLights == false && colorChanged==false)
         {
             for (int count = 0; count < allCeilingLightsGameobject.Length; count++)
@@ -141,6 +148,28 @@ public class LightToggle : MonoBehaviour
             buttonLights[0].enabled = true;
             buttonLights[1].enabled = true;
         }
+    }
+
+    public void CompareSafeZones()
+    {
+        Debug.Log(DangerZone.transform.position);
+        Debug.Log(SafeZones[0].transform.position);
+        Debug.Log("Comparing path");
+        if (NavMesh.CalculatePath(DangerZone.transform.position, SafeZones[0].transform.position, NavMesh.AllAreas, SafePath))
+        {
+            if (SafePath.corners.Length>0)
+            {
+                PathLength = SafePath.corners.Length;
+                for (int i = 0; i < SafePath.corners.Length - 1; i++)
+                    Debug.DrawLine(SafePath.corners[i], SafePath.corners[i + 1], Color.red);
+            }
+            else
+            {
+                Debug.Log("No number");
+            }
+            
+        }
+        
     }
 
 }

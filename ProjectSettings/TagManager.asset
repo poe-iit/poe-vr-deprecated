@@ -8,6 +8,7 @@ TagManager:
   - FxTemporaire
   - id_card
   - ceiling_light
+  - server
   layers:
   - Default
   - TransparentFX
