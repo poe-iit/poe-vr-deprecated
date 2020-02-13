@@ -34,6 +34,7 @@ public class LightToggle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SafePath = new NavMeshPath();
         timeUsed = targetTime;
         /*for (int count = 0; count < Lights.Length; count++)
         {
@@ -153,10 +154,11 @@ public class LightToggle : MonoBehaviour
     public void CompareSafeZones()
     {
         Debug.Log(DangerZone.transform.position);
-        Debug.Log(SafeZones[0].transform.position);
+        Debug.Log("Safe zone 1: " + SafeZones[0].transform.position);
+        Debug.Log("Safe zone 2: " + SafeZones[1].transform.position);
         Debug.Log("Comparing path");
-        if (NavMesh.CalculatePath(DangerZone.transform.position, SafeZones[0].transform.position, NavMesh.AllAreas, SafePath))
-        {
+        NavMesh.CalculatePath(DangerZone.transform.position, SafeZones[0].transform.position, NavMesh.AllAreas, SafePath);
+        
             if (SafePath.corners.Length>0)
             {
                 PathLength = SafePath.corners.Length;
@@ -168,7 +170,7 @@ public class LightToggle : MonoBehaviour
                 Debug.Log("No number");
             }
             
-        }
+        
         
     }
 
