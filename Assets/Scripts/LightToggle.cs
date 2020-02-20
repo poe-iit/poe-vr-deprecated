@@ -9,9 +9,10 @@ public class LightToggle : MonoBehaviour
 
     public GameObject DangerZone;
     public GameObject[] SafeZones;
-    private NavMeshPath SafePath;
-    public float PathLength;
-    
+    private NavMeshPath[] SafePath = new NavMeshPath[64];
+    public float[] PathLength = new float[32];
+    public int shortestPathIndex=0;
+    public float shortestPathCost = 0;
 
     public float timeUsed;
     public bool toggleLights = false;
@@ -34,7 +35,10 @@ public class LightToggle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SafePath = new NavMeshPath();
+        for (int i = 0; i<SafePath.Length; i++) {
+            SafePath[i] = new NavMeshPath();
+
+        }
         timeUsed = targetTime;
         /*for (int count = 0; count < Lights.Length; count++)
         {
@@ -53,12 +57,15 @@ public class LightToggle : MonoBehaviour
             allCeilingLights[i].color = initialColor;
         }*/
 
+        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         CompareSafeZones();
+        FindShortestPath();
         if (toggleLights == false && colorChanged==false)
         {
             for (int count = 0; count < allCeilingLightsGameobject.Length; count++)
@@ -153,25 +160,54 @@ public class LightToggle : MonoBehaviour
 
     public void CompareSafeZones()
     {
-        Debug.Log(DangerZone.transform.position);
-        Debug.Log("Safe zone 1: " + SafeZones[0].transform.position);
-        Debug.Log("Safe zone 2: " + SafeZones[1].transform.position);
-        Debug.Log("Comparing path");
-        NavMesh.CalculatePath(DangerZone.transform.position, SafeZones[0].transform.position, NavMesh.AllAreas, SafePath);
-        
-            if (SafePath.corners.Length>0)
+        //Debug.Log(DangerZone.transform.position);
+        //Debug.Log("Safe zone 1: " + SafeZones[0].transform.position);
+        //Debug.Log("Safe zone 2: " + SafeZones[1].transform.position);
+        //Debug.Log("Comparing path");
+
+        for (int i = 0; i<SafeZones.Length; i++) {
+            PathLength[i] = 0;
+            NavMesh.CalculatePath(DangerZone.transform.position, SafeZones[i].transform.position, NavMesh.AllAreas, SafePath[i]);
+
+            //DRAW PATH CODE
+            if (SafePath[i].corners.Length > 0)
             {
-                PathLength = SafePath.corners.Length;
-                for (int i = 0; i < SafePath.corners.Length - 1; i++)
-                    Debug.DrawLine(SafePath.corners[i], SafePath.corners[i + 1], Color.red);
+                //PathLength = SafePath[i].corners.Length;
+                for (int i2 = 0; i2 < SafePath[i].corners.Length - 1; i2++)
+                    Debug.DrawLine(SafePath[i].corners[i2], SafePath[i].corners[i2 + 1], Color.red);
             }
             else
             {
                 Debug.Log("No number");
             }
+
+            for (int i3 = 0; i3 < (SafePath[i].corners.Length-1); i3++)
+            {
+                PathLength[i] += Vector3.Distance(SafePath[i].corners[i3], SafePath[i].corners[i3+1]);
+                Debug.Log(Vector3.Distance(SafePath[i].corners[i3], SafePath[i].corners[i3 + 1]));
+            }
+
+
             
+            
+
+
+        }
         
-        
+    }
+
+    public void FindShortestPath()
+    {
+        shortestPathCost = PathLength[0];
+        shortestPathIndex = 0;
+        for (int i = 0; i<PathLength.Length; i++)
+        {
+            if (PathLength[i]< shortestPathCost && PathLength[i]>0)
+            {
+                shortestPathCost = PathLength[i];
+                shortestPathIndex = i;
+            }
+        }
     }
 
 }
