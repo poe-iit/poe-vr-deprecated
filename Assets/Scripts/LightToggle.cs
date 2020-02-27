@@ -13,6 +13,11 @@ public class LightToggle : MonoBehaviour
     public float[] PathLength = new float[32];
     public int shortestPathIndex=0;
     public float shortestPathCost = 0;
+    //public Light[] pathOfLights = new Light[64];
+
+    public List<Light> pathOfLights = new List<Light>();
+
+    public GameObject navAgent;
 
     public float timeUsed;
     public bool toggleLights = false;
@@ -35,6 +40,7 @@ public class LightToggle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        navAgent = GameObject.FindGameObjectWithTag("nav_agent");
         for (int i = 0; i<SafePath.Length; i++) {
             SafePath[i] = new NavMeshPath();
 
@@ -45,10 +51,12 @@ public class LightToggle : MonoBehaviour
             Lights[count].color = initialColor;
         }*/
         allCeilingLightsGameobject = GameObject.FindGameObjectsWithTag("ceiling_light");
-        for (int i = 0; i<allCeilingLightsGameobject.Length; i++)
+        /*for (int i = 0; i<allCeilingLightsGameobject.Length; i++)
         {
             allCeilingLightsGameobject[i].GetComponent<Light>().color=initialColor;
-        }
+        }*/
+
+
         //numberLights = allCeilingLightsGameobject.Length;
         //allCeilingLights[0] = allCeilingLightsGameobject[0].GetComponent<Light>();
         /*public Light[] allCeilingLights = new Light[numberLights];
@@ -66,6 +74,7 @@ public class LightToggle : MonoBehaviour
     {
         CompareSafeZones();
         FindShortestPath();
+        /*
         if (toggleLights == false && colorChanged==false)
         {
             for (int count = 0; count < allCeilingLightsGameobject.Length; count++)
@@ -125,7 +134,7 @@ public class LightToggle : MonoBehaviour
 
 
 
-            }
+            }*/
         
     }
     public void toggleTheLights ()
@@ -184,7 +193,7 @@ public class LightToggle : MonoBehaviour
             for (int i3 = 0; i3 < (SafePath[i].corners.Length-1); i3++)
             {
                 PathLength[i] += Vector3.Distance(SafePath[i].corners[i3], SafePath[i].corners[i3+1]);
-                Debug.Log(Vector3.Distance(SafePath[i].corners[i3], SafePath[i].corners[i3 + 1]));
+                //Debug.Log(Vector3.Distance(SafePath[i].corners[i3], SafePath[i].corners[i3 + 1]));
             }
 
 
@@ -208,6 +217,121 @@ public class LightToggle : MonoBehaviour
                 shortestPathIndex = i;
             }
         }
+
+        navAgent.SendMessage("setPath", SafePath[shortestPathIndex]);
+    }
+
+    public void addToLightPath(Light lightToAdd)
+    {
+        Debug.Log("assigning path");
+        /*for (int i = 0; i<pathOfLights.Length; i++) {
+            Debug.Log(pathOfLights[i]);
+            if (pathOfLights[i] == null)
+            {
+                pathOfLights[i] = lightToAdd;
+                i = pathOfLights.Length;
+            }
+        }*/
+        pathOfLights.Add(lightToAdd);
+    }
+
+    public void doSomethingWithLights()
+    {
+        /*for (int i = 0; i < pathOfLights.Length; i++)
+        {
+            if (pathOfLights[i]!=null)
+            {
+                pathOfLights[i].color = Color.green;
+            }
+        }*/
+
+        if (colorChanged == false) { }
+            for (int count = 0; count < pathOfLights.Count; count++)
+            {
+                //Lights[count].color = color0;
+                pathOfLights[count].color = color0;
+
+            }
+        colorChanged = true;
+
+        timeUsed -= Time.deltaTime;
+
+        if (timeUsed <= 0.0f)
+        {
+            if (i != 0)
+            {
+                pathOfLights[i - 1].enabled = !pathOfLights[i - 1].enabled;
+                //Lights[i-1].color = color0;
+            }
+            if (i >= pathOfLights.Count)
+            {
+
+                i = 0;
+                pathOfLights[i].enabled = !pathOfLights[i].enabled;
+                //Lights[i].color = color0;
+                timeUsed = targetTime;
+                i++;
+                Debug.Log("reached end of array");
+
+            }
+            else
+            {
+                pathOfLights[i].enabled = !pathOfLights[i].enabled;
+                //Lights[i].color = colorPath;
+                //lastIndex = i;
+                i++;
+                timeUsed = targetTime;
+            }
+
+        }
+
+    }
+    
+    public void strobeLights()
+    {
+        /*if (colorChanged == false)
+        {
+            for (int count = 0; count < pathOfLights.Length; count++)
+            {
+                //Lights[count].color = color0;
+                pathOfLights[count].color = color0;
+
+            }
+        }
+        colorChanged = true;
+
+        timeUsed -= Time.deltaTime;
+
+        if (timeUsed <= 0.0f)
+        {
+            if (pathOfLights[i]!=null)
+            {
+                if (i != 0)
+                {
+                    pathOfLights[i - 1].enabled = !pathOfLights[i - 1].enabled;
+                    //Lights[i-1].color = color0;
+                }
+                if (i >= pathOfLights.Length)
+                {
+
+                    i = 0;
+                    pathOfLights[i].enabled = !pathOfLights[i].enabled;
+                    //Lights[i].color = color0;
+                    timeUsed = targetTime;
+                    i++;
+                    Debug.Log("reached end of array");
+
+                }
+                else
+                {
+                    pathOfLights[i].enabled = !pathOfLights[i].enabled;
+                    //Lights[i].color = colorPath;
+                    //lastIndex = i;
+                    i++;
+                    timeUsed = targetTime;
+                }
+            }
+        }*/
     }
 
 }

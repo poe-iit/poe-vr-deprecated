@@ -9,6 +9,7 @@ TagManager:
   - id_card
   - ceiling_light
   - server
+  - nav_agent
   layers:
   - Default
   - TransparentFX
