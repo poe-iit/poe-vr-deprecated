@@ -9,7 +9,9 @@ public class NavAgentConfig : MonoBehaviour
     public NavMeshAgent agent;
     public GameObject server;
     public int agentIndex;
-    
+    public bool resetPos = false;
+    public bool pathFinding = false;
+
     void Start()
     {
         server = GameObject.FindGameObjectWithTag("server");
@@ -18,7 +20,9 @@ public class NavAgentConfig : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (agent.remainingDistance == 0)
+        
+        Debug.Log("reaminging distance "+ agent.remainingDistance);
+        if (agent.remainingDistance == 0 && pathFinding)
         {
             Debug.Log("AGENT STOPPED");
             server.SendMessage("doSomethingWithLights");
@@ -28,12 +32,21 @@ public class NavAgentConfig : MonoBehaviour
 
     public void setPath(NavMeshPath chosenPath)
     {
-        agent.path=chosenPath;
+        //removePath();
+        //resetLocation();
+        agent.SetPath(chosenPath);
+        //Debug.Log("PATH IS SET ON AGENT = "+ (agent.path = chosenPath));
+        //agent.isStopped = false;
+    }
+    public void removePath()
+    {
+        //agent.isStopped = true;
+        agent.ResetPath();
+       
     }
 
-    
 
-    public void passAddition( Light light)
+    public void passAddition(Light light)
     {
         server.SendMessage("addToLightPath", light);
     }
@@ -42,4 +55,24 @@ public class NavAgentConfig : MonoBehaviour
     {
         agentIndex = index;
     }
+
+    public void resetLocation()
+    {
+        Vector3 parentLocation = this.transform.parent.position;
+        //this.transform.position = parentLocation;
+        agent.Warp(parentLocation);
+        //this.transform.position = new Vector3(0, 1, 0);
+    }
+
+    public void setPathFinding(bool value)
+    {
+        pathFinding = value;
+        if (pathFinding==false)
+        {
+            agent.ResetPath();
+            resetLocation();
+        }
+        //Debug.Log("PAHTH FINDING VARIABLE SET");
+    }
 }
+
