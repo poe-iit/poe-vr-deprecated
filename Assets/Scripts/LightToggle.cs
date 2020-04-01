@@ -19,7 +19,7 @@ public class LightToggle : MonoBehaviour
 
     public List<Light> pathOfLights = new List<Light>();
 
-    public GameObject navAgent;
+    public List<GameObject> navAgent = new List<GameObject>();
 
     public float timeUsed;
     public bool toggleLights = false;
@@ -44,7 +44,20 @@ public class LightToggle : MonoBehaviour
     {
         GetSafeZones();
         GetStartZones();
-        navAgent = GameObject.FindGameObjectWithTag("nav_agent");
+
+        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("nav_agent"))
+        {
+
+            //peopleList.Add(fooObj);
+            navAgent.Add(fooObj);
+        }
+
+        for (int i=0;i<navAgent.Count;i++)
+        {
+            navAgent[i].SendMessage("setAgentIndex", i);
+        }
+        //navAgent = GameObject.FindGameObjectsWithTag("nav_agent");
+        
         /*for (int i=0;i<SafePath.Count; i++) {
             for (int j = 0; j < SafePath[i].Count; j++) {
                 SafePath[i][j] = new NavMeshPath();
@@ -198,7 +211,7 @@ public class LightToggle : MonoBehaviour
         //Debug.Log("Safe zone 1: " + SafeZones[0].transform.position);
         //Debug.Log("Safe zone 2: " + SafeZones[1].transform.position);
         //Debug.Log("Comparing path");
-        for (int i = 0; i < SafeZones.Count; i++)
+        for (int i = 0; i < StartZones.Count; i++)
         {
             for (int i2 = 0; i2 < SafeZones.Count; i2++)
             {
@@ -281,7 +294,8 @@ public class LightToggle : MonoBehaviour
         }
         for (int i3 = 0; i3 < SafePath[shortestPathIndex][shortestPathIndex2].corners.Length - 1; i3++)
             Debug.DrawLine(SafePath[shortestPathIndex][shortestPathIndex2].corners[i3], SafePath[shortestPathIndex][shortestPathIndex2].corners[i3 + 1], Color.blue);
-        navAgent.SendMessage("setPath", SafePath[shortestPathIndex][shortestPathIndex2]);
+        
+        navAgent[i].SendMessage("setPath", SafePath[shortestPathIndex][shortestPathIndex2]);
     }
 
     public void addToLightPath(Light lightToAdd)

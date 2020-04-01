@@ -8,6 +8,7 @@ public class NavAgentConfig : MonoBehaviour
     // Start is called before the first frame update
     public NavMeshAgent agent;
     public GameObject server;
+    public int agentIndex;
     
     void Start()
     {
@@ -35,5 +36,10 @@ public class NavAgentConfig : MonoBehaviour
     public void passAddition( Light light)
     {
         server.SendMessage("addToLightPath", light);
+    }
+
+    public void setAgentIndex(int index)
+    {
+        agentIndex = index;
     }
 }
