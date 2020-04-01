@@ -48,6 +48,7 @@ public class NavAgentConfig : MonoBehaviour
 
     public void passAddition(Light light)
     {
+        Debug.Log("PASSING LIGHT AGAIN");
         server.SendMessage("addToLightPath", light);
     }
 

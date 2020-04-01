@@ -6,9 +6,11 @@ public class addLightToList : MonoBehaviour
 {
     // Start is called before the first frame updat
     public Light ceilingLight;
+    public GameObject server;
     void Start()
     {
-        
+        server = GameObject.FindGameObjectWithTag("server");
+        server.gameObject.SendMessage("addAllLights", ceilingLight);
     }
 
     // Update is called once per frame
@@ -22,6 +24,7 @@ public class addLightToList : MonoBehaviour
         Debug.Log(other.gameObject.tag);
         if (other.gameObject.tag == "nav_agent")
         {
+            Debug.Log("Passing: "+ other.gameObject.tag);
             other.gameObject.SendMessage("passAddition", ceilingLight);
 
         }

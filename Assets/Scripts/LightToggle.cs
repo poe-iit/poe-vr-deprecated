@@ -35,7 +35,7 @@ public class LightToggle : MonoBehaviour
     public bool enableButtons = false;
     public bool allowedToRun = false;
     public Light[] buttonLights;
-    public GameObject[] allCeilingLightsGameobject;
+    public List<Light> allCeilingLights;
     public static int numberLights = 0;
     public AudioSource alarmAudio;
     public bool audioAllowed = true;
@@ -79,11 +79,8 @@ public class LightToggle : MonoBehaviour
         {
             Lights[count].color = initialColor;
         }*/
-        allCeilingLightsGameobject = GameObject.FindGameObjectsWithTag("ceiling_light");
-        /*for (int i = 0; i<allCeilingLightsGameobject.Length; i++)
-        {
-            allCeilingLightsGameobject[i].GetComponent<Light>().color=initialColor;
-        }*/
+        //allCeilingLightsGameobject = GameObject.FindGameObjectsWithTag("ceiling_light");
+        setLightColor(colorPath);
 
 
         //numberLights = allCeilingLightsGameobject.Length;
@@ -108,9 +105,11 @@ public class LightToggle : MonoBehaviour
             CompareSafeZones();
             FindShortestPath();
         }
-        else
+        else if((pathFinding==false && pathDecided==false) || (pathFinding == false && pathDecided == true))
         {
+
             setLightColor(initialColor);
+
         }
       
         
@@ -265,6 +264,9 @@ public class LightToggle : MonoBehaviour
             }
         }*/
         pathOfLights.Add(lightToAdd);
+
+        Debug.Log("FINALLY ADDING LIGHT " + lightToAdd);
+        Debug.Log("Length "+ pathOfLights.Count);
     }
 
     public void doSomethingWithLights()
@@ -277,15 +279,20 @@ public class LightToggle : MonoBehaviour
             }
         }*/
 
-        if (colorChanged == false) { }
-            for (int count = 0; count < pathOfLights.Count; count++)
+        if (colorChanged == false)
+        {
+            setLightColor(color0);
+
+            /*for (int count = 0; count < pathOfLights.Count; count++)
             {
                 //Lights[count].color = color0;
                 pathOfLights[count].color = color0;
 
-            }
-        colorChanged = true;
-
+            }*/
+            colorChanged = true;
+        }
+        
+        
         timeUsed -= Time.deltaTime;
 
         if (timeUsed <= 0.0f)
@@ -371,15 +378,27 @@ public class LightToggle : MonoBehaviour
         
     }
 
-    public void setLightColor(Color lighColor)
+    public void setLightColorPath(Color lightColor)
     {
         for (int count = 0; count < pathOfLights.Count; count++)
         {
             //Lights[count].color = color0;
-            pathOfLights[count].color = lighColor;
+            pathOfLights[count].color = lightColor;
             pathOfLights[count].enabled = true;
             pathOfLights.RemoveAt(count);
         }
-        
+
+    }
+    public void setLightColor(Color lightColor)
+    {
+        for (int i = 0; i < allCeilingLights.Count; i++)
+        {
+            allCeilingLights[i].GetComponent<Light>().color = lightColor;
+        }
+    }
+
+    public void addAllLights(Light light)
+    {
+        allCeilingLights.Add(light);
     }
 }

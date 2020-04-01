@@ -12,6 +12,7 @@ TagManager:
   - nav_agent
   - start_zone
   - safe_zone
+  - celing_light_light
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - ceiling collider
   - 
   - 
   - 
