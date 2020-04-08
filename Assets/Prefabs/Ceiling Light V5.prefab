@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ce43fec3098145e47aba7aad73224988, type: 2}
+  - {fileID: 2100000, guid: f9d3ddc660a7df04fb4f67636bcc6a7d, type: 2}
   - {fileID: 2100000, guid: ce43fec3098145e47aba7aad73224988, type: 2}
   - {fileID: 2100000, guid: ce43fec3098145e47aba7aad73224988, type: 2}
   m_StaticBatchInfo:
@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ceilingLight: {fileID: 2166669136781224123}
+  server: {fileID: 0}
 --- !u!1 &7649548072807816284
 GameObject:
   m_ObjectHideFlags: 0

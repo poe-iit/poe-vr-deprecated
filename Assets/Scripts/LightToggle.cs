@@ -12,8 +12,8 @@ public class LightToggle : MonoBehaviour
     //public GameObject StartZone;
     public List<GameObject> SafeZones = new List<GameObject>();
     public List<GameObject> StartZones = new List<GameObject>();
-    private List<List<NavMeshPath>> SafePath = new List<List<NavMeshPath>>();
-    public List<List<float>> PathLength = new List<List<float>>();
+    private List<NavMeshPath> SafePath = new List<NavMeshPath>();
+    public List<float> PathLength = new List<float>();
     public int shortestPathIndex = 0;
     public int shortestPathIndex2 = 0;
     public float shortestPathCost = 0;
@@ -68,11 +68,8 @@ public class LightToggle : MonoBehaviour
         }*/
         for (int i=0; i<SafeZones.Count; i++)
         {
-            PathLength.Add(new List<float>());
-            for (int i2 = 0; i2 < SafeZones.Count; i2++)
-            {
-                PathLength[i].Add(new float());
-            }
+            PathLength.Add(new float());
+            
         }
         timeUsed = targetTime;
         /*for (int count = 0; count < Lights.Length; count++)
@@ -111,6 +108,7 @@ public class LightToggle : MonoBehaviour
             setLightColor(initialColor);
 
         }
+        drawPaths();
       
         
     }
@@ -163,33 +161,40 @@ public class LightToggle : MonoBehaviour
         //Debug.Log("Comparing path");
         for (int i = 0; i < StartZones.Count; i++)
         {
-            for (int i2 = 0; i2 < SafeZones.Count; i2++)
-            {
-                PathLength[i][i2]=0;
-            }
+           
+                PathLength[i]=0;
+            
         }
         for (int i = 0; i<(StartZones.Count); i++) {
-            SafePath.Add(new List<NavMeshPath>());
-            PathLength.Add(new List<float>());
-            SafePath[i] = new List<NavMeshPath>();
+            //SafePath.Add(new NavMeshPath());
+            //PathLength.Add(new float());
+            //SafePath[i] = new NavMeshPath();
             for (int i2 = 0; i2 < (SafeZones.Count); i2++)
             {
                 //PathLength[i][i2] = 0;
                 NavMeshPath tempSafePath = new NavMeshPath();
                 NavMesh.CalculatePath(StartZones[i].transform.position, SafeZones[i2].transform.position, NavMesh.AllAreas, tempSafePath);
-                //if (tempSafePath.status==NavMeshPathStatus.PathInvalid) {
-                    Debug.Log(tempSafePath);
-                    SafePath[i].Add(tempSafePath);
-               // }
+                //Debug.Log("TEMP PATH LENGTH " + Vector3.Distance(SafeZones[i].transform.position, tempSafePath.corners[tempSafePath.corners.Length-1]));
+                
+                Debug.Log("TEMP PATH STATUS " + tempSafePath.status);
+                if (tempSafePath.status== NavMeshPathStatus.PathComplete) {
+                    
+                    Debug.Log("ADDING PATH FOR SAFE ZONE " + SafeZones[i2]);
+                    SafePath.Add(tempSafePath);
+                }
+                else
+                {
+                    
+                }
                 
                 //SafePath[i][i2]
                 //DRAW PATH CODE
 
-                if (SafePath[i][i2].corners.Length > 0)
+                if (SafePath[i2].corners.Length > 0)
                 {
                     
-                    for (int i3 = 0; i3 < SafePath[i][i2].corners.Length-1; i3++)
-                        Debug.DrawLine(SafePath[i][i2].corners[i3], SafePath[i][i2].corners[i3 + 1], Color.red);
+                    for (int i3 = 0; i3 < SafePath[i2].corners.Length-1; i3++)
+                        Debug.DrawLine(SafePath[i2].corners[i3], SafePath[i2].corners[i3 + 1], Color.red);
                 }
                 else
                 {
@@ -199,10 +204,10 @@ public class LightToggle : MonoBehaviour
                 /*for (int i5= 0; i5<PathLength[i].Count; i5++){
                     PathLength[i][i5] = 0;
                 }*/
-                for (int i3 = 0; i3 < (SafePath[i][i2].corners.Length-1); i3++)
+                for (int i3 = 0; i3 < (SafePath[i2].corners.Length-1); i3++)
                 {
                    
-                        PathLength[i][i2]+=Vector3.Distance(SafePath[i][i2].corners[i3], SafePath[i][i2].corners[i3 + 1]);
+                        PathLength[i2]+=Vector3.Distance(SafePath[i2].corners[i3], SafePath[i2].corners[i3 + 1]);
                         //Debug.Log(PathLength[0][i3]);
                     
                 }
@@ -218,36 +223,35 @@ public class LightToggle : MonoBehaviour
 
     public void FindShortestPath()
     {
-        Debug.Log("First shortest path cost:"+PathLength[0][0]);
+        Debug.Log("First shortest path cost:"+PathLength[0]);
         shortestPathCost = 999999999999;
         shortestPathIndex = 0;
-        shortestPathIndex2 = 0;
-        for (int i = 0; i<(StartZones.Count); i++)
+        //shortestPathIndex2 = 0;
+        for (int i = 0; i<(SafeZones.Count); i++)
         {
-            for (int j = 0; j < (SafeZones.Count); j++)
-            {
-                Debug.Log("Is: " + PathLength[i][j]+ " The shortest path cost?");
-                Debug.Log(PathLength[i][j]);
-                if (PathLength[i][j] < shortestPathCost && PathLength[i][j] > 0)
+            
+                Debug.Log("Is: " + PathLength[i]+ " The shortest path cost?");
+                Debug.Log(PathLength[i]);
+                if (PathLength[i] < shortestPathCost && PathLength[i] > 0)
                 {
-                    //Debug.Log("YES");
-                    //Debug.Log(PathLength[i][j]);
-                    shortestPathCost = PathLength[i][j];
+                    Debug.Log("YES");
+                    Debug.Log(PathLength[i]);
+                    shortestPathCost = PathLength[i];
                     shortestPathIndex = i;
-                    shortestPathIndex2 = j;
+                   
                 }
                 else
                 {
-                    //Debug.Log("NO");
+                    Debug.Log("NO");
                 }
-            }
+            
         }
-        for (int i3 = 0; i3 < SafePath[shortestPathIndex][shortestPathIndex2].corners.Length - 1; i3++)
-            Debug.DrawLine(SafePath[shortestPathIndex][shortestPathIndex2].corners[i3], SafePath[shortestPathIndex][shortestPathIndex2].corners[i3 + 1], Color.blue);
+        for (int i3 = 0; i3 < SafePath[shortestPathIndex].corners.Length - 1; i3++)
+            Debug.DrawLine(SafePath[shortestPathIndex].corners[i3], SafePath[shortestPathIndex].corners[i3 + 1], Color.blue);
 
         for (int ni=0; ni<navAgent.Count; ni++) {
            // Debug.Log("ni index "+ni);
-            navAgent[ni].SendMessage("setPath", SafePath[shortestPathIndex][shortestPathIndex2]);
+            navAgent[ni].SendMessage("setPath", SafePath[shortestPathIndex]);
             pathDecided = true;
         }
     }
@@ -401,4 +405,16 @@ public class LightToggle : MonoBehaviour
     {
         allCeilingLights.Add(light);
     }
+
+    public void drawPaths()
+    {
+        for (int i=0; i<SafePath.Count; i++) {
+            for (int i3 = 0; i3 < SafePath[i].corners.Length - 1; i3++)
+            {
+
+                Debug.DrawLine(SafePath[i].corners[i3], SafePath[i].corners[i3 + 1], Color.blue);
+            }
+        }
+        }
+
 }
