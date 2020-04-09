@@ -39,7 +39,7 @@ public class LightToggle : MonoBehaviour
     public static int numberLights = 0;
     public AudioSource alarmAudio;
     public bool audioAllowed = true;
-    
+    public bool lightsRemoved = false;
     //public int lastIndex = 0;
     // Start is called before the first frame update
     void Start()
@@ -77,7 +77,7 @@ public class LightToggle : MonoBehaviour
             Lights[count].color = initialColor;
         }*/
         //allCeilingLightsGameobject = GameObject.FindGameObjectsWithTag("ceiling_light");
-        setLightColor(colorPath);
+        setLightColor(color0);
 
 
         //numberLights = allCeilingLightsGameobject.Length;
@@ -101,12 +101,20 @@ public class LightToggle : MonoBehaviour
         if (pathFinding && pathDecided==false) {
             CompareSafeZones();
             FindShortestPath();
+            lightsRemoved = false;
         }
         else if((pathFinding==false && pathDecided==false) || (pathFinding == false && pathDecided == true))
         {
 
             setLightColor(initialColor);
-
+            colorChanged = false;
+            if (lightsRemoved==false || pathOfLights.Count>0) {
+                for (int count = 0; count < pathOfLights.Count; count++)
+                {
+                    pathOfLights.RemoveAt(count);
+                }
+                lightsRemoved = true;
+            }
         }
         drawPaths();
       
@@ -159,6 +167,7 @@ public class LightToggle : MonoBehaviour
         //Debug.Log("Safe zone 1: " + SafeZones[0].transform.position);
         //Debug.Log("Safe zone 2: " + SafeZones[1].transform.position);
         //Debug.Log("Comparing path");
+        
         for (int i = 0; i < StartZones.Count; i++)
         {
            
@@ -286,7 +295,7 @@ public class LightToggle : MonoBehaviour
         if (colorChanged == false)
         {
             setLightColor(color0);
-
+            setLightColorPath(colorPath);
             /*for (int count = 0; count < pathOfLights.Count; count++)
             {
                 //Lights[count].color = color0;
@@ -330,52 +339,7 @@ public class LightToggle : MonoBehaviour
 
     }
     
-    public void strobeLights()
-    {
-        if (colorChanged == false)
-        {
-            for (int count = 0; count < pathOfLights.Count; count++)
-            {
-                //Lights[count].color = color0;
-                pathOfLights[count].color = color0;
-
-            }
-        }
-        colorChanged = true;
-
-        timeUsed -= Time.deltaTime;
-
-        if (timeUsed <= 0.0f)
-        {
-            if (pathOfLights[i]!=null)
-            {
-                if (i != 0)
-                {
-                    pathOfLights[i - 1].enabled = !pathOfLights[i - 1].enabled;
-                    //Lights[i-1].color = color0;
-                }
-                if (i >= pathOfLights.Count)
-                {
-
-                    i = 0;
-                    pathOfLights[i].enabled = !pathOfLights[i].enabled;
-                    //Lights[i].color = color0;
-                    timeUsed = targetTime;
-                    i++;
-                    //Debug.Log("reached end of array");
-
-                }
-                else
-                {
-                    pathOfLights[i].enabled = !pathOfLights[i].enabled;
-                    //Lights[i].color = colorPath;
-                    //lastIndex = i;
-                    i++;
-                    timeUsed = targetTime;
-                }
-            }
-        }
-    }
+    
     public void setPathFinding(bool value)
     {
         pathFinding = value;
@@ -389,7 +353,7 @@ public class LightToggle : MonoBehaviour
             //Lights[count].color = color0;
             pathOfLights[count].color = lightColor;
             pathOfLights[count].enabled = true;
-            pathOfLights.RemoveAt(count);
+            //pathOfLights.RemoveAt(count);
         }
 
     }
