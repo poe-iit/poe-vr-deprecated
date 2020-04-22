@@ -21,7 +21,7 @@ public class NavAgentConfig : MonoBehaviour
     void Update()
     {
         
-        Debug.Log("reaminging distance "+ agent.remainingDistance);
+        //Debug.Log("reaminging distance "+ agent.remainingDistance);
         if (agent.remainingDistance == 0 && pathFinding)
         {
             Debug.Log("AGENT STOPPED");

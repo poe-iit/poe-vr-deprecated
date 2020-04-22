@@ -23,6 +23,8 @@ namespace Valve.VR.Extras
         public event PointerEventHandler PointerIn;
         public event PointerEventHandler PointerOut;
         public event PointerEventHandler PointerClick;
+        public LayerMask collideLayer;
+        public float angle = 45.0f;
 
         Transform previousContact = null;
 
@@ -98,10 +100,11 @@ namespace Valve.VR.Extras
             }
 
             float dist = 100f;
-
+           
             Ray raycast = new Ray(transform.position, transform.forward);
+            
             RaycastHit hit;
-            bool bHit = Physics.Raycast(raycast, out hit);
+            bool bHit = Physics.Raycast(raycast, out hit, collideLayer);
 
             if (previousContact && previousContact != hit.transform)
             {

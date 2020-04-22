@@ -13,6 +13,8 @@ TagManager:
   - start_zone
   - safe_zone
   - celing_light_light
+  - floor
+  - fire
   layers:
   - Default
   - TransparentFX

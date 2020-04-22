@@ -40,6 +40,7 @@ public class LightToggle : MonoBehaviour
     public AudioSource alarmAudio;
     public bool audioAllowed = true;
     public bool lightsRemoved = false;
+    public GameObject[] fire;
     //public int lastIndex = 0;
     // Start is called before the first frame update
     void Start()
@@ -59,18 +60,19 @@ public class LightToggle : MonoBehaviour
             navAgent[i].SendMessage("setAgentIndex", i);
         }
         //navAgent = GameObject.FindGameObjectsWithTag("nav_agent");
-        
+
         /*for (int i=0;i<SafePath.Count; i++) {
             for (int j = 0; j < SafePath[i].Count; j++) {
                 SafePath[i][j] = new NavMeshPath();
 
             }
         }*/
-        for (int i=0; i<SafeZones.Count; i++)
+
+        /*for (int i=0; i<SafeZones.Count; i++)
         {
             PathLength.Add(new float());
             
-        }
+        }*/
         timeUsed = targetTime;
         /*for (int count = 0; count < Lights.Length; count++)
         {
@@ -95,6 +97,20 @@ public class LightToggle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        fire = GameObject.FindGameObjectsWithTag("fire");
+
+        
+        if (fire.Length > 0)
+        {
+            pathFinding = true;
+        }
+        else
+        {
+            pathFinding = false;
+            pathDecided = false;
+        }
+        
+
         for (int ni=0; ni<navAgent.Count; ni++) {
             navAgent[ni].SendMessage("setPathFinding", pathFinding);
         }
@@ -113,11 +129,19 @@ public class LightToggle : MonoBehaviour
                 {
                     pathOfLights.RemoveAt(count);
                 }
+                for (int count = 0; count<SafePath.Count; count++)
+                {
+                    SafePath.RemoveAt(count);
+                }
+                for (int count = 0; count < PathLength.Count; count++)
+                {
+                    PathLength.RemoveAt(count);
+                }
+                i = 0;
                 lightsRemoved = true;
             }
         }
         drawPaths();
-      
         
     }
     public void toggleTheLights ()
@@ -167,13 +191,18 @@ public class LightToggle : MonoBehaviour
         //Debug.Log("Safe zone 1: " + SafeZones[0].transform.position);
         //Debug.Log("Safe zone 2: " + SafeZones[1].transform.position);
         //Debug.Log("Comparing path");
-        
-        for (int i = 0; i < StartZones.Count; i++)
+        for (int i = 0; i < SafeZones.Count; i++)
+        {
+            PathLength.Add(new float());
+            PathLength[i] = 0;
+
+        }
+        /*for (int i = 0; i < StartZones.Count; i++)
         {
            
                 PathLength[i]=0;
             
-        }
+        }*/
         for (int i = 0; i<(StartZones.Count); i++) {
             //SafePath.Add(new NavMeshPath());
             //PathLength.Add(new float());
@@ -312,6 +341,7 @@ public class LightToggle : MonoBehaviour
         {
             if (i != 0)
             {
+                Debug.Log("I value: " + i);
                 pathOfLights[i - 1].enabled = !pathOfLights[i - 1].enabled;
                 //Lights[i-1].color = color0;
             }
