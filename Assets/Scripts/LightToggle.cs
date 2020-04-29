@@ -118,6 +118,7 @@ public class LightToggle : MonoBehaviour
             CompareSafeZones();
             FindShortestPath();
             lightsRemoved = false;
+            //startFindingPath();
         }
         else if((pathFinding==false && pathDecided==false) || (pathFinding == false && pathDecided == true))
         {
@@ -375,6 +376,11 @@ public class LightToggle : MonoBehaviour
         pathFinding = value;
         
     }
+    public void setPathDecided(bool value)
+    {
+        pathDecided = value;
+
+    }
 
     public void setLightColorPath(Color lightColor)
     {
@@ -410,5 +416,10 @@ public class LightToggle : MonoBehaviour
             }
         }
         }
-
+    public void startFindingPath()
+    {
+        CompareSafeZones();
+        FindShortestPath();
+        lightsRemoved = false;
+    }
 }
